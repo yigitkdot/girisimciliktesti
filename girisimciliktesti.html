@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>girisimciliktesti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1B1F3B;
+    --paper: #F7F4EC;
+    --card: #FFFFFF;
+    --gold: #C98A2E;
+    --teal: #2F6E68;
+    --line: rgba(27,31,59,0.12);
+    --muted: #6B6F8A;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #F1EEE4;
+      --paper: #14162A;
+      --card: #1D2038;
+      --gold: #E3A94A;
+      --teal: #5FB3AB;
+      --line: rgba(241,238,228,0.14);
+      --muted: #A7ABCB;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #F1EEE4;
+    --paper: #14162A;
+    --card: #1D2038;
+    --gold: #E3A94A;
+    --teal: #5FB3AB;
+    --line: rgba(241,238,228,0.14);
+    --muted: #A7ABCB;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+  }
+  .wrap {
+    width: 100%;
+    max-width: 520px;
+    padding: 28px 20px 40px;
+  }
+  header {
+    margin-bottom: 22px;
+  }
+  .kicker {
+    font-size: 13px;
+    color: var(--teal);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1.15;
+    margin: 6px 0 8px;
+  }
+  .sub {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .progress-row {
+    display: flex;
+    gap: 6px;
+    margin: 22px 0 18px;
+  }
+  .dot {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .dot > span {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: var(--gold);
+    transition: width .35s ease;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px 20px;
+  }
+  .qnum {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 10px;
+  }
+  .qtext {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.35;
+    margin: 0 0 20px;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .opt {
+    text-align: left;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.4;
+    cursor: pointer;
+  }
+  .opt:hover { border-color: var(--gold); }
+  .opt:active { transform: scale(0.99); }
+  .opt:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .backrow {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .backbtn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 4px 0;
+    font-family: 'Inter', sans-serif;
+  }
+  .backbtn:disabled { visibility: hidden; }
+
+  /* Result */
+  .result-tag {
+    font-size: 13px;
+    color: var(--teal);
+    font-weight: 600;
+  }
+  .result-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 30px;
+    margin: 6px 0 14px;
+    line-height: 1.15;
+  }
+  .result-desc {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin: 0 0 22px;
+  }
+  .bars { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+  .bar-row { display: grid; grid-template-columns: 96px 1fr 28px; align-items: center; gap: 10px; }
+  .bar-label { font-size: 13px; color: var(--muted); }
+  .bar-track { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--gold); border-radius: 4px; transition: width .5s ease; }
+  .bar-pct { font-size: 12px; color: var(--muted); text-align: right; }
+  .restart {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: none;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Girişimcilik Kulübü</div>
+    <h1>Hangi Girişimcisin?</h1>
+    <p class="sub" id="introSub">10 soruda kendi girişimcilik tipini keşfet. Doğru ya da yanlış cevap yok — sadece sana en yakın seçeneği seç.</p>
+  </header>
+
+  <div class="progress-row" id="progressRow"></div>
+
+  <div class="card" id="quizCard">
+    <p class="qnum" id="qnum">Soru 1 / 10</p>
+    <p class="qtext" id="qtext"></p>
+    <div class="options" id="options"></div>
+    <div class="backrow">
+      <button class="backbtn" id="backBtn">← Önceki soru</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="resultCard">
+    <div class="result-tag">Sonucun</div>
+    <div class="result-title" id="resTitle"></div>
+    <p class="result-desc" id="resDesc"></p>
+    <div class="bars" id="bars"></div>
+    <button class="restart" id="restartBtn">Testi tekrar çöz</button>
+  </div>
+</div>
+
+<script>
+const TYPES = {
+  yenilikci: {
+    title: "Yenilikçi (İcatçı)",
+    desc: "Aklına sürekli yeni fikirler geliyor ve mevcut çözümlerle yetinmiyorsun. Kimsenin düşünmediği bir yaklaşımı denemekten çekinmezsin. Sende olması gereken: fikirlerini olgunlaştıracak bir ekip ve disiplinli bir uygulama planı."
+  },
+  lider: {
+    title: "Lider",
+    desc: "İnsanları bir araya getirip ortak bir hedefe yönlendirmekte iyisin. Karar anlarında öne çıkar, sorumluluk almaktan kaçınmazsın. Sende olması gereken: seni tamamlayacak, detaycı ve analitik ekip arkadaşları."
+  },
+  analist: {
+    title: "Analist / Stratejist",
+    desc: "Bir işe atılmadan önce veriye, plana ve sayılara bakarsın. Riski körü körüne değil, hesaplayarak alırsın. Sende olması gereken: seni harekete geçirecek, hız kazandıran bir vizyoner ortak."
+  },
+  sosyal: {
+    title: "Sosyal Girişimci",
+    desc: "Seni asıl motive eden kâr değil, yarattığın etki. Bir sorunu gördüğünde onu toplum için nasıl çözebileceğini düşünürsün. Sende olması gereken: fikrini sürdürülebilir bir modele dönüştürecek iş zekası."
+  },
+  risk: {
+    title: "Risk Alan Girişimci",
+    desc: "Belirsizlikten korkmazsın, hatta ondan beslenirsin. Hızlı hareket eder, denemekten çekinmezsin. Sende olması gereken: seni frenleyecek değil, hızını doğru yöne kanalize edecek bir plan."
+  }
+};
+
+const QUESTIONS = [
+  {
+    q: "Bir okul projesinde sana rol seçme şansı verilse hangisini seçerdin?",
+    opts: [
+      ["Fikri bulan kişi olmak", "yenilikci"],
+      ["Ekibi yönetmek", "lider"],
+      ["Planı ve bütçeyi hazırlamak", "analist"],
+      ["Projenin faydalı olduğundan emin olmak", "sosyal"],
+      ["Hiç denenmemiş bir yöntemle yapmak", "risk"]
+    ]
+  },
+  {
+    q: "Elinde 1000 TL olsa ne yaparsın?",
+    opts: [
+      ["Yeni bir ürün fikri için prototip yaparım", "yenilikci"],
+      ["Küçük bir ekip kurup iş bölümü yaparım", "lider"],
+      ["Piyasayı araştırıp en mantıklı yatırımı seçerim", "analist"],
+      ["Bir ihtiyacı karşılayan bir girişime yönlendiririm", "sosyal"],
+      ["Riskli ama getirisi yüksek bir fırsata yatırırım", "risk"]
+    ]
+  },
+  {
+    q: "Bir arkadaşın seni nasıl tanımlar?",
+    opts: [
+      ["\"Kafası hep yeni fikirlerle dolu\"", "yenilikci"],
+      ["\"Herkesi bir araya toplar\"", "lider"],
+      ["\"Her şeyi ince eleyip sık dokur\"", "analist"],
+      ["\"Başkalarını düşünür\"", "sosyal"],
+      ["\"Hiç çekinmeden atılır\"", "risk"]
+    ]
+  },
+  {
+    q: "Bir işte en çok neyden keyif alırsın?",
+    opts: [
+      ["Yeni bir şey yaratmaktan", "yenilikci"],
+      ["Bir ekibi başarıya taşımaktan", "lider"],
+      ["Doğru stratejiyi bulmaktan", "analist"],
+      ["Hayatları kolaylaştırmaktan", "sosyal"],
+      ["Bilinmeyene atılmaktan", "risk"]
+    ]
+  },
+  {
+    q: "Planların yarıda bozulduğunda ne yaparsın?",
+    opts: [
+      ["Alternatif bir fikir üretirim", "yenilikci"],
+      ["Ekibi toparlayıp yola devam ederim", "lider"],
+      ["Ne yanlış gittiğini analiz ederim", "analist"],
+      ["Etkilenen kişileri düşünüp çözüm ararım", "sosyal"],
+      ["Anında yeni bir yol denerim", "risk"]
+    ]
+  },
+  {
+    q: "Hangi ders/etkinlik sana daha çekici gelir?",
+    opts: [
+      ["Tasarım ve icat atölyeleri", "yenilikci"],
+      ["Öğrenci kulübü yönetimi", "lider"],
+      ["Ekonomi ve veri analizi", "analist"],
+      ["Gönüllülük ve sosyal sorumluluk projeleri", "sosyal"],
+      ["Yarışmalar ve hızlı karar gerektiren oyunlar", "risk"]
+    ]
+  },
+  {
+    q: "Bir girişim kurma fikri geldiğinde ilk aklına gelen şey ne olur?",
+    opts: [
+      ["\"Bunu nasıl farklı yapabilirim?\"", "yenilikci"],
+      ["\"Kimlerle çalışmalıyım?\"", "lider"],
+      ["\"Sayılar ne diyor?\"", "analist"],
+      ["\"Bu kime, nasıl fayda sağlar?\"", "sosyal"],
+      ["\"Hemen deneyeyim, görürüz\"", "risk"]
+    ]
+  },
+  {
+    q: "Grup çalışmasında genelde hangi işi üstlenirsin?",
+    opts: [
+      ["Beyin fırtınası ve fikir üretimi", "yenilikci"],
+      ["Sunumu ve son sözü söylemek", "lider"],
+      ["Araştırma ve verileri düzenlemek", "analist"],
+      ["Herkesin görüşünü dengelemek", "sosyal"],
+      ["Son ana kalan işi hızlıca bitirmek", "risk"]
+    ]
+  },
+  {
+    q: "Başarıyı nasıl tanımlarsın?",
+    opts: [
+      ["Kimsenin yapmadığı bir şeyi yapmak", "yenilikci"],
+      ["Güçlü bir ekip kurmak", "lider"],
+      ["Doğru kararları vermiş olmak", "analist"],
+      ["Gerçek bir fark yaratmak", "sosyal"],
+      ["Cesaretin karşılığını almak", "risk"]
+    ]
+  },
+  {
+    q: "Tanıtım gününde standınızda hangi görevi almak isterdin?",
+    opts: [
+      ["Yeni bir aktivite fikri tasarlamak", "yenilikci"],
+      ["Standdaki ekibi koordine etmek", "lider"],
+      ["Katılımcı verilerini takip etmek", "analist"],
+      ["Ziyaretçilerle gerçek bağ kurmak", "sosyal"],
+      ["Anlık doğaçlama çözümler üretmek", "risk"]
+    ]
+  }
+];
+
+let current = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+
+const progressRow = document.getElementById('progressRow');
+const qnum = document.getElementById('qnum');
+const qtext = document.getElementById('qtext');
+const optionsEl = document.getElementById('options');
+const backBtn = document.getElementById('backBtn');
+const quizCard = document.getElementById('quizCard');
+const resultCard = document.getElementById('resultCard');
+const introSub = document.getElementById('introSub');
+
+QUESTIONS.forEach(() => {
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  dot.innerHTML = '<span></span>';
+  progressRow.appendChild(dot);
+});
+const dotFills = [...progressRow.querySelectorAll('.dot > span')];
+
+function renderQuestion() {
+  const item = QUESTIONS[current];
+  qnum.textContent = `Soru ${current + 1} / ${QUESTIONS.length}`;
+  qtext.textContent = item.q;
+  optionsEl.innerHTML = '';
+  item.opts.forEach(([label, type]) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = label;
+    if (answers[current] === type) btn.style.borderColor = 'var(--gold)';
+    btn.addEventListener('click', () => selectAnswer(type));
+    optionsEl.appendChild(btn);
+  });
+  backBtn.disabled = current === 0;
+  dotFills.forEach((f, i) => f.style.width = i <= current ? '100%' : '0%');
+}
+
+function selectAnswer(type) {
+  answers[current] = type;
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+backBtn.addEventListener('click', () => {
+  if (current > 0) {
+    current--;
+    renderQuestion();
+  }
+});
+
+function showResult() {
+  const tally = { yenilikci: 0, lider: 0, analist: 0, sosyal: 0, risk: 0 };
+  answers.forEach(a => { if (a) tally[a]++; });
+
+  const total = QUESTIONS.length;
+  const sorted = Object.entries(tally).sort((a, b) => b[1] - a[1]);
+  const winner = sorted[0][0];
+
+  document.getElementById('resTitle').textContent = TYPES[winner].title;
+  document.getElementById('resDesc').textContent = TYPES[winner].desc;
+
+  const barsEl = document.getElementById('bars');
+  barsEl.innerHTML = '';
+  sorted.forEach(([type, count]) => {
+    const pct = Math.round((count / total) * 100);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <div class="bar-label">${TYPES[type].title.split(' ')[0]}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <div class="bar-pct">${pct}%</div>
+    `;
+    barsEl.appendChild(row);
+  });
+
+  quizCard.classList.add('hidden');
+  progressRow.classList.add('hidden');
+  introSub.textContent = 'Testi tamamladın. İşte sonucun:';
+  resultCard.classList.remove('hidden');
+}
+
+document.getElementById('restartBtn').addEventListener('click', () => {
+  current = 0;
+  answers = new Array(QUESTIONS.length).fill(null);
+  resultCard.classList.add('hidden');
+  quizCard.classList.remove('hidden');
+  progressRow.classList.remove('hidden');
+  introSub.textContent = '10 soruda kendi girişimcilik tipini keşfet. Doğru ya da yanlış cevap yok — sadece sana en yakın seçeneği seç.';
+  renderQuestion();
+});
+
+renderQuestion();
+</script>
+</body>
+</html>
